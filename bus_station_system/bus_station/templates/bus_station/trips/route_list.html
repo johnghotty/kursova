@@ -1,0 +1,51 @@
+<!-- templates/bus_station/trips/route_list.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Маршрути - Система автовокзалу{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Маршрути</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Номер рейсу</th>
+                        <th>Пункт призначення</th>
+                        <th>Відстань</th>
+                        <th>Час відправлення</th>
+                        <th>Час прибуття</th>
+                        <th>Дні тижня</th>
+                        <th>Марка автобуса</th>
+                        <th>Тариф</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for route in routes %}
+                    <tr>
+                        <td>{{ route.number }}</td>
+                        <td>{{ route.destination.name }}</td>
+                        <td>{{ route.distance }} км</td>
+                        <td>{{ route.departure_time }}</td>
+                        <td>{{ route.arrival_time }}</td>
+                        <td>{{ route.get_days_of_week_display }}</td>
+                        <td>{{ route.bus_model.name }}</td>
+                        <td>{{ route.tariff }} грн</td>
+                        <td>
+                            <a href="{% url 'route_detail' route.pk %}" class="btn btn-sm btn-outline-primary">Деталі</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center">Маршрутів не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

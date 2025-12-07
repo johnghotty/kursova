@@ -1,0 +1,79 @@
+<!-- templates/bus_station/buses/bus_detail.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Автобус {{ bus.number }} - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Автобус {{ bus.number }}</h1>
+    <a href="{% url 'bus_list' %}" class="btn btn-outline-secondary">Назад до списку</a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Інформація про автобус</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Марка:</th>
+                        <td>{{ bus.bus_model.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Номер:</th>
+                        <td>{{ bus.number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Витрати пального:</th>
+                        <td>{{ bus.bus_model.fuel_consumption }} л/100км</td>
+                    </tr>
+                    <tr>
+                        <th>Кількість місць:</th>
+                        <td>{{ bus.bus_model.seats_count }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Майбутні рейси</h5>
+            </div>
+            <div class="card-body">
+                {% if future_trips %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Рейс</th>
+                                    <th>Пункт призначення</th>
+                                    <th>Дії</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trip in future_trips %}
+                                <tr>
+                                    <td>{{ trip.date }}</td>
+                                    <td>{{ trip.route.number }}</td>
+                                    <td>{{ trip.route.destination.name }}</td>
+                                    <td>
+                                        <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-sm btn-outline-primary">Перегляд</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Немає майбутніх рейсів для цього автобуса</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

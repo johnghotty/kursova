@@ -1,0 +1,70 @@
+<!-- templates/bus_station/reports/report_revenue.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}{{ report_title }} - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ report_title }}</h1>
+    <a href="{% url 'reports_dashboard' %}" class="btn btn-outline-secondary">Назад до звітів</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Пункт призначення</th>
+                        <th>Кількість проданих квитків</th>
+                        <th>Загальна виручка</th>
+                        <th>Середній чек</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in revenue_data %}
+                    <tr>
+                        <td>{{ item.trip__route__destination__name }}</td>
+                        <td>{{ item.tickets_sold }}</td>
+                        <td>{{ item.total_revenue|floatformat:2 }} грн</td>
+                        <td>
+                            {% if item.tickets_sold > 0 %}
+                                {{ item.total_revenue|floatformat:2 }} грн
+                            {% else %}
+                                0 грн
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">Дані не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Загальна статистика</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <h3>{{ revenue_data|length }}</h3>
+                <p class="text-muted">Пунктів призначення</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h3>{{ total_tickets }}</h3>
+                <p class="text-muted">Всього квитків продано</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h3>{{ total_revenue|floatformat:2 }} грн</h3>
+                <p class="text-muted">Загальна виручка</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

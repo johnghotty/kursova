@@ -1,0 +1,83 @@
+<!-- templates/bus_station/trips/trip_list.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Рейси - Система автовокзалу{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Рейси</h1>
+
+<div class="card">
+    <div class="card-header">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <input type="date" name="date" class="form-control" value="{{ selected_date }}">
+            </div>
+            <div class="col-md-3">
+                <select name="destination" class="form-select">
+                    <option value="">Всі пункти</option>
+                    {% for destination in destinations %}
+                    <option value="{{ destination.id }}" {% if selected_destination == destination.id|stringformat:"i" %}selected{% endif %}>
+                        {{ destination.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-secondary">Фільтрувати</button>
+                <a href="{% url 'trip_list' %}" class="btn btn-outline-secondary">Скинути</a>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Рейс</th>
+                        <th>Пункт призначення</th>
+                        <th>Дата</th>
+                        <th>Час відправлення</th>
+                        <th>Автобус</th>
+                        <th>Місць</th>
+                        <th>Статус</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trip in trips %}
+                    <tr>
+                        <td>{{ trip.route.number }}</td>
+                        <td>{{ trip.route.destination.name }}</td>
+                        <td>{{ trip.date }}</td>
+                        <td>{{ trip.route.departure_time }}</td>
+                        <td>{{ trip.bus.bus_model.name }} ({{ trip.bus.number }})</td>
+                        <td>{{ trip.get_sold_tickets_count }}/{{ trip.bus.bus_model.seats_count }}</td>
+                        <td>
+                            {% with sold=trip.get_sold_tickets_count total=trip.bus.bus_model.seats_count %}
+                                {% if sold == total %}
+                                    <span class="badge bg-danger">Повний</span>
+                                {% elif sold > total|add:"-5" %}
+                                    <span class="badge bg-warning">Майже повний</span>
+                                {% else %}
+                                    <span class="badge bg-success">Є місця</span>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
+                            <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-sm btn-outline-primary">Деталі</a>
+                            <a href="{% url 'ticket_create' %}?trip={{ trip.id }}" class="btn btn-sm btn-success">Бронювати</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">Рейсів не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'bus_station/partials/_pagination.html' %}
+    </div>
+</div>
+{% endblock %}

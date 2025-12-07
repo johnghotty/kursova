@@ -1,0 +1,58 @@
+<!-- templates/bus_station/home.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Головна - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">Ласкаво просимо до системи автовокзалу</h1>
+        <p class="lead">Система обліку продажу квитків та управління рейсами</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Рейси сьогодні</h5>
+                <h2 class="card-text">{{ today_trips }}</h2>
+                <a href="{% url 'trip_list' %}?date={{ today_date|date:'Y-m-d' }}" class="text-white">Переглянути →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Квитків продано</h5>
+                <h2 class="card-text">{{ today_tickets }}</h2>
+                <a href="{% url 'ticket_list' %}?trip_date={{ today_date|date:'Y-m-d' }}" class="text-white">Переглянути →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Швидкі дії</h5>
+                <p class="card-text">
+                    <a href="{% url 'ticket_create' %}" class="text-white">Забронювати квиток</a><br>
+                    <a href="{% url 'trip_list' %}" class="text-white">Переглянути рейси</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Останні дії</h5>
+            </div>
+            <div class="card-body">
+                <p>Тут може бути інформація про останні операції...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

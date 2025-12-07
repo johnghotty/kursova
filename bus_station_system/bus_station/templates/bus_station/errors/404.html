@@ -1,0 +1,13 @@
+<!-- templates/bus_station/errors/404.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Сторінку не знайдено - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-1">404</h1>
+    <h2>Сторінку не знайдено</h2>
+    <p class="lead">Запитувана сторінка не існує.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">На головну</a>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!-- templates/bus_station/buses/destination_list.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Пункти призначення - Система автовокзалу{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Пункти призначення</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Назва</th>
+                        <th>Кількість маршрутів</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for destination in destinations %}
+                    <tr>
+                        <td>{{ destination.name }}</td>
+                        <td>{{ destination.route_set.count }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center">Пунктів призначення не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

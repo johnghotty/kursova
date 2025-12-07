@@ -1,0 +1,100 @@
+<!-- templates/bus_station/tickets/ticket_detail.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Квиток {{ ticket.ticket_number }} - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Квиток {{ ticket.ticket_number }}</h1>
+    <a href="{% url 'ticket_list' %}" class="btn btn-outline-secondary">Назад до списку</a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Інформація про квиток</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>№ квитка:</th>
+                        <td>{{ ticket.ticket_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Рейс:</th>
+                        <td>{{ ticket.trip.route.number }} - {{ ticket.trip.route.destination.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дата рейсу:</th>
+                        <td>{{ ticket.trip.date }}</td>
+                    </tr>
+                    <tr>
+                        <th>Час відправлення:</th>
+                        <td>{{ ticket.trip.route.departure_time }}</td>
+                    </tr>
+                    <tr>
+                        <th>Місце:</th>
+                        <td>{{ ticket.seat_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Статус:</th>
+                        <td>
+                            {% if ticket.status == 'booked' %}
+                                <span class="badge bg-warning">Заброньовано</span>
+                            {% elif ticket.status == 'sold' %}
+                                <span class="badge bg-success">Продано</span>
+                            {% else %}
+                                <span class="badge bg-danger">Скасовано</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Ціна:</th>
+                        <td>{{ ticket.price }} грн</td>
+                    </tr>
+                    <tr>
+                        <th>Час бронювання:</th>
+                        <td>{{ ticket.booking_time }}</td>
+                    </tr>
+                    {% if ticket.sold_time %}
+                    <tr>
+                        <th>Час продажу:</th>
+                        <td>{{ ticket.sold_time }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Дії</h5>
+            </div>
+            <div class="card-body">
+                {% if ticket.status == 'booked' %}
+                    {% if ticket.is_booking_expired %}
+                        <div class="alert alert-danger">
+                            Бронювання прострочено!
+                        </div>
+                    {% else %}
+                        <form method="post" action="{% url 'confirm_booking' ticket.pk %}" class="mb-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success w-100">Підтвердити продаж</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                <a href="{% url 'ticket_update' ticket.pk %}" class="btn btn-outline-primary w-100 mb-2">Змінити статус</a>
+
+                <form method="post" action="{% url 'cancel_booking' ticket.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger w-100">Скасувати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

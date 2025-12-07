@@ -1,0 +1,39 @@
+<!-- templates/bus_station/buses/bus_model_list.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Марки автобусів - Система автовокзалу{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Марки автобусів</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Назва</th>
+                        <th>Витрати пального</th>
+                        <th>Кількість місць</th>
+                        <th>Кількість автобусів</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bus_model in bus_models %}
+                    <tr>
+                        <td>{{ bus_model.name }}</td>
+                        <td>{{ bus_model.fuel_consumption }} л/100км</td>
+                        <td>{{ bus_model.seats_count }}</td>
+                        <td>{{ bus_model.bus_set.count }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">Марок автобусів не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

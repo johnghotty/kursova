@@ -1,0 +1,49 @@
+<!-- templates/bus_station/reports/report_trip_dates.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}{{ report_title }} - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ report_title }}</h1>
+    <a href="{% url 'reports_dashboard' %}" class="btn btn-outline-secondary">Назад до звітів</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Рейси з неузгодженими датами</h5>
+    </div>
+    <div class="card-body">
+        {% if problematic_trips %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Рейс</th>
+                            <th>Дата</th>
+                            <th>Заплановані дні</th>
+                            <th>Фактичний день</th>
+                            <th>Пункт призначення</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for problem in problematic_trips %}
+                        <tr>
+                            <td>{{ problem.trip.route.number }}</td>
+                            <td>{{ problem.trip.date }}</td>
+                            <td>{{ problem.scheduled_days }}</td>
+                            <td>{{ problem.actual_day }}</td>
+                            <td>{{ problem.trip.route.destination.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                Всі рейси узгоджені з розкладом!
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

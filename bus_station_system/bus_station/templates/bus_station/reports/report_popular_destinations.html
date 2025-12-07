@@ -1,0 +1,41 @@
+<!-- templates/bus_station/reports/report_popular_destinations.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}{{ report_title }} - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ report_title }}</h1>
+    <a href="{% url 'reports_dashboard' %}" class="btn btn-outline-secondary">Назад до звітів</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Період: {{ period }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Пункт призначення</th>
+                        <th>Кількість рейсів</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for destination in destinations %}
+                    <tr>
+                        <td>{{ destination.route__destination__name }}</td>
+                        <td>{{ destination.trip_count }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center">Дані не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

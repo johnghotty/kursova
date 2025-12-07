@@ -1,0 +1,101 @@
+<!-- templates/bus_station/trips/route_detail.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Маршрут {{ route.number }} - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Маршрут {{ route.number }}</h1>
+    <a href="{% url 'route_list' %}" class="btn btn-outline-secondary">Назад до списку</a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Основна інформація</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <th>Номер рейсу:</th>
+                        <td>{{ route.number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Пункт призначення:</th>
+                        <td>{{ route.destination.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Відстань:</th>
+                        <td>{{ route.distance }} км</td>
+                    </tr>
+                    <tr>
+                        <th>Час відправлення:</th>
+                        <td>{{ route.departure_time }}</td>
+                    </tr>
+                    <tr>
+                        <th>Час прибуття:</th>
+                        <td>{{ route.arrival_time }}</td>
+                    </tr>
+                    <tr>
+                        <th>Дні тижня:</th>
+                        <td>{{ route.get_days_of_week_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Марка автобуса:</th>
+                        <td>{{ route.bus_model.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Тариф:</th>
+                        <td>{{ route.tariff }} грн</td>
+                    </tr>
+                    <tr>
+                        <th>Витрати пального:</th>
+                        <td>{{ route.bus_model.fuel_consumption }} л/100км</td>
+                    </tr>
+                    <tr>
+                        <th>Кількість місць:</th>
+                        <td>{{ route.bus_model.seats_count }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Майбутні рейси</h5>
+            </div>
+            <div class="card-body">
+                {% if future_trips %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Автобус</th>
+                                    <th>Дії</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for trip in future_trips %}
+                                <tr>
+                                    <td>{{ trip.date }}</td>
+                                    <td>{{ trip.bus.bus_model.name }} ({{ trip.bus.number }})</td>
+                                    <td>
+                                        <a href="{% url 'trip_detail' trip.pk %}" class="btn btn-sm btn-outline-primary">Перегляд</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Немає майбутніх рейсів для цього маршруту</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

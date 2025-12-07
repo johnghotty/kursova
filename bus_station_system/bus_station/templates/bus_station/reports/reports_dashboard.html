@@ -1,0 +1,70 @@
+<!-- templates/bus_station/reports/reports_dashboard.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Звіти - Система автовокзалу{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Звіти</h1>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Популярні пункти</h5>
+                <p class="card-text">Найбільша кількість рейсів за пунктами призначення</p>
+                <a href="{% url 'report_most_popular_destinations' %}" class="btn btn-primary">Переглянути</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Виручка</h5>
+                <p class="card-text">Виручка від продажу квитків по пунктах призначення</p>
+                <a href="{% url 'report_revenue_by_destination' %}" class="btn btn-primary">Переглянути</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Наповненість</h5>
+                <p class="card-text">Середня наповненість автобусів по рейсах</p>
+                <a href="{% url 'report_average_bus_occupancy' %}" class="btn btn-primary">Переглянути</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Дні тижня</h5>
+                <p class="card-text">Завантаженість по днях тижня</p>
+                <a href="{% url 'report_busiest_days' %}" class="btn btn-primary">Переглянути</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Рідкісні рейси</h5>
+                <p class="card-text">Рейси, які здійснюються найрідше</p>
+                <a href="{% url 'report_rarest_trips' %}" class="btn btn-primary">Переглянути</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Узгодження дат</h5>
+                <p class="card-text">Перевірка узгодженості дат виїзду</p>
+                <a href="{% url 'report_trip_dates_coordination' %}" class="btn btn-primary">Переглянути</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

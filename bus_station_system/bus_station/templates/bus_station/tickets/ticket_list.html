@@ -1,0 +1,85 @@
+<!-- templates/bus_station/tickets/ticket_list.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Квитки - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Квитки</h1>
+    <a href="{% url 'ticket_create' %}" class="btn btn-primary">Забронювати квиток</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">Всі статуси</option>
+                    <option value="booked" {% if request.GET.status == 'booked' %}selected{% endif %}>Заброньовано</option>
+                    <option value="sold" {% if request.GET.status == 'sold' %}selected{% endif %}>Продано</option>
+                    <option value="cancelled" {% if request.GET.status == 'cancelled' %}selected{% endif %}>Скасовано</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="date" name="trip_date" class="form-control" value="{{ request.GET.trip_date }}">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-secondary">Фільтрувати</button>
+                <a href="{% url 'ticket_list' %}" class="btn btn-outline-secondary">Скинути</a>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>№ квитка</th>
+                        <th>Рейс</th>
+                        <th>Дата рейсу</th>
+                        <th>Місце</th>
+                        <th>Статус</th>
+                        <th>Ціна</th>
+                        <th>Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.ticket_number }}</td>
+                        <td>{{ ticket.trip.route.number }} - {{ ticket.trip.route.destination.name }}</td>
+                        <td>{{ ticket.trip.date }}</td>
+                        <td>{{ ticket.seat_number }}</td>
+                        <td>
+                            {% if ticket.status == 'booked' %}
+                                <span class="badge bg-warning">Заброньовано</span>
+                            {% elif ticket.status == 'sold' %}
+                                <span class="badge bg-success">Продано</span>
+                            {% else %}
+                                <span class="badge bg-danger">Скасовано</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ticket.price }} грн</td>
+                        <td>
+                            <a href="{% url 'ticket_detail' ticket.pk %}" class="btn btn-sm btn-outline-primary">Перегляд</a>
+                            {% if ticket.status == 'booked' %}
+                                <form method="post" action="{% url 'confirm_booking' ticket.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-success">Підтвердити</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">Квитків не знайдено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% include 'bus_station/partials/_pagination.html' %}
+    </div>
+</div>
+{% endblock %}

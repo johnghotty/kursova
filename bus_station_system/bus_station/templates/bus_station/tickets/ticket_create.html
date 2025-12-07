@@ -1,0 +1,59 @@
+<!-- templates/bus_station/tickets/ticket_create.html -->
+{% extends 'bus_station/base.html' %}
+
+{% block title %}Бронювання квитка - Система автовокзалу{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">Бронювання квитка</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.trip.id_for_label }}" class="form-label">Рейс</label>
+                        {{ form.trip }}
+                        {% if form.trip.errors %}
+                            <div class="text-danger">{{ form.trip.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.seat_number.id_for_label }}" class="form-label">Номер місця</label>
+                        {{ form.seat_number }}
+                        {% if form.seat_number.errors %}
+                            <div class="text-danger">{{ form.seat_number.errors }}</div>
+                        {% endif %}
+                        <div class="form-text" id="available-seats-info">Оберіть рейс для перегляду вільних місць</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Забронювати квиток</button>
+                        <a href="{% url 'ticket_list' %}" class="btn btn-outline-secondary">Скасувати</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('id_trip').addEventListener('change', function() {
+    const tripId = this.value;
+    if (tripId) {
+        fetch(`/tickets/get-available-seats/${tripId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const infoElement = document.getElementById('available-seats-info');
+                infoElement.textContent = `Вільних місць: ${data.available_seats.length} з ${data.total_seats}`;
+                infoElement.className = 'form-text text-success';
+            });
+    }
+});
+</script>
+{% endblock %}
